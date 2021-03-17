@@ -1,27 +1,40 @@
-import React, { Component } from 'react';
-import DiscoverBlock from './DiscoverBlock/components/DiscoverBlock';
-import '../styles/_discover.scss';
+import React from "react";
+import DiscoverBlock from "./DiscoverBlock/components/DiscoverBlock";
+import "../styles/_discover.scss";
+import { DiscoverContext } from "../context";
 
-export default class Discover extends Component {
-  constructor() {
-    super();
+export default function Discover() {
+  const [discoverData, setData] = React.useState({
+    newReleases: [],
+    playlists: [],
+    categories: [],
+  });
 
-    this.state = {
-      newReleases: [],
-      playlists: [],
-      categories: []
-    };
-  }
-
-  render() {
-    const { newReleases, playlists, categories } = this.state;
-
-    return (
+  return (
+    <DiscoverContext.Provider
+      value={{
+        discoverData,
+        setData,
+      }}
+    >
       <div className="discover">
-        <DiscoverBlock text="RELEASED THIS WEEK" id="released" data={newReleases} />
-        <DiscoverBlock text="FEATURED PLAYLISTS" id="featured" data={playlists} />
-        <DiscoverBlock text="BROWSE" id="browse" data={categories} imagesKey="icons" />
+        <DiscoverBlock
+          text="RELEASED THIS WEEK"
+          dataKey="newReleases"
+          id="released"
+        />
+        <DiscoverBlock
+          text="FEATURED PLAYLISTS"
+          dataKey="playlists"
+          id="featured"
+        />
+        <DiscoverBlock
+          text="BROWSE"
+          dataKey="categories"
+          id="browse"
+          imagesKey="icons"
+        />
       </div>
-    );
-  }
+    </DiscoverContext.Provider>
+  );
 }
