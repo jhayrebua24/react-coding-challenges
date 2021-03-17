@@ -9,6 +9,25 @@ const axiosConfig = () => ({
   },
 });
 
+export const handleErrors = (err) => {
+  if (err.response) {
+    const {
+      response: {
+        status,
+        data: { message },
+      },
+    } = err;
+    if (status === 401 || status === 404) alert(message);
+    if (status === 403) alert(message || "Forbidden request");
+    if (status === 400) alert(message || "Bad request");
+    if (status === 500) alert("Something wrong with the server!");
+    if (status === 429) alert(message || "Can't send more request");
+  } else {
+    console.log("SERVER ERROR!");
+    // logout(true);
+  }
+};
+
 //check types
 const validType = ["get", "post", "put", "delete"];
 const withPayload = ["post", "put"];
@@ -37,6 +56,7 @@ export const apiRequest = async (type = "get", url = "", payload = {}) => {
         );
     return res;
   } catch (err) {
+    handleErrors(err);
     return new Error(err);
   }
 };
