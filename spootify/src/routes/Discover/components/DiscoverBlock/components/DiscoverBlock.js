@@ -8,9 +8,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import DiscoverItem from "./DiscoverItem";
 import "../styles/_discover-block.scss";
-import { useDiscover } from "../../../context";
-import { apiRequest } from "../../../../../api";
-import { discoverConfig, transformData } from "../../../helper";
+import { discoverConfig, transformData } from "routes/Discover/helper";
+import { apiRequest } from "api";
+import { useApiData } from "redux/hooks";
+import { DISCOVER_DATA } from "redux/constants";
+import { setData } from "redux/actions";
 
 function scrollContainer(id, { isNegative } = {}) {
   return () => {
@@ -28,7 +30,7 @@ const PARAMS = {
 };
 
 function DiscoverBlock({ text, id, dataKey, imagesKey }) {
-  const { discoverData, setData } = useDiscover(); // hooks for discover data
+  const discoverData = useApiData(DISCOVER_DATA, {});
   const [isLoading, setIsLoading] = React.useState(true);
   //  get url & results key for the data key on this block
   const { url, resultsKey } = React.useMemo(
@@ -44,13 +46,15 @@ function DiscoverBlock({ text, id, dataKey, imagesKey }) {
     apiRequest("get", url, PARAMS)
       .then((res) => {
         const lists = transformData(res, resultsKey);
-        setData((prev) => ({
-          ...prev,
+
+        setData(DISCOVER_DATA, (state) => ({
+          ...state[DISCOVER_DATA],
           [dataKey]: lists,
         }));
+        //
       })
       .finally(() => setIsLoading(false));
-  }, [dataKey, resultsKey, setData, url, setIsLoading]);
+  }, [dataKey, resultsKey, url, setIsLoading]);
 
   return (
     <div className="discover-block">

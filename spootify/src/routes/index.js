@@ -1,6 +1,8 @@
 import React from "react";
 import { requestToken } from "../auth";
 import Discover from "./Discover";
+import store from "../redux/store";
+import { Provider } from "react-redux";
 
 export default function Routes() {
   const [isAppReady, setIsAppReady] = React.useState(false);
@@ -10,6 +12,9 @@ export default function Routes() {
 
   if (!isAppReady) return null;
 
-  // Here you'd return an array of routes
-  return <Discover />;
+  return (
+    <Provider store={store}>
+      <Discover />
+    </Provider>
+  );
 }

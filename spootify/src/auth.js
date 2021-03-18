@@ -1,12 +1,20 @@
 import axios from "axios";
 import config from "./config";
 
+/**
+ * store token to storage
+ * @param  {String} token token from spotify
+ * @return Array
+ */
 export const setToken = (token) => localStorage.setItem("token", token);
 export const getToken = () => localStorage.getItem("token") || null;
 export const hasToken = () => !!getToken();
 
-// request token to spotify APi
-export const requestToken = () => {
+/**
+ * request token to spotify
+ * @return Promise
+ */
+export const requestToken = async () => {
   const params = new URLSearchParams();
   params.append("grant_type", "client_credentials");
   return axios
